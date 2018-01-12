@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <img src="extras/ss_slack.png" width="60%" />
+  <img src="extras/ss_slack.png" width="100%" />
 </p>
 
 ## Install

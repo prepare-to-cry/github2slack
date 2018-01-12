@@ -32,11 +32,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cesarferreira/github2slack.git"
+    "url": "https://github.com/prepare-to-cry/github2slack.git"
   },
   "bugs": {
-    "url": "https://github.com/cesarferreira/github2slack/issues"
+    "url": "https://github.com/prepare-to-cry/github2slack/issues"
   },
-  "homepage": "https://github.com/cesarferreira/github2slack#readme",
+  "homepage": "https://github.com/prepare-to-cry/github2slack#readme",
   "license": "MIT"
 }

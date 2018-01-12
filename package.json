@@ -1,6 +1,6 @@
 {
   "name": "github2slack",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Notify a slack channel when a label is added to a github pull request",
   "contributors": [
     {

@@ -1,0 +1,42 @@
+{
+  "name": "github2slack",
+  "version": "0.0.0",
+  "description": "Notify a slack channel when a label is added to a github pull request",
+  "author": {
+    "name": "Cesar Ferreira",
+    "email": "cesar.manuel.ferreira@gmail.com",
+    "url": "http://cesarferreira.com"
+  },
+  "scripts": {
+    "start": "node example.js",
+    "lint": "eslint src/**/*",
+    "test": "xo"
+  },
+  "bin": {
+    "github2slack": "cli.js"
+  },
+  "main": "cli.js",
+  "keywords": [],
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "dotenv": "^4.0.0",
+    "meow": "^4.0.0",
+    "slack-webhook": "^1.0.0",
+    "sync-request": "^4.1.0",
+    "underscore": "^1.8.3",
+    "update-notifier": "^2.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.15.0",
+    "xo": "^0.18.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cesarferreira/github2slack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cesarferreira/github2slack/issues"
+  },
+  "homepage": "https://github.com/cesarferreira/github2slack#readme",
+  "license": "MIT"
+}

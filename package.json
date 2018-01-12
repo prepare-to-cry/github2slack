@@ -2,11 +2,14 @@
   "name": "github2slack",
   "version": "0.0.0",
   "description": "Notify a slack channel when a label is added to a github pull request",
-  "author": {
+  "contributors": [{
     "name": "Cesar Ferreira",
     "email": "cesar.manuel.ferreira@gmail.com",
     "url": "http://cesarferreira.com"
-  },
+  }, {
+    "name": "Thomas Bruggenwirth",
+    "email": "tbruggenwirth@gmail.com"
+  }],
   "scripts": {
     "start": "node example.js",
     "lint": "eslint src/**/*",

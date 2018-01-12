@@ -11,18 +11,12 @@ updateNotifier({ pkg }).notify();
 const cli = meow(`
 Usage
 
-   $ github2slack <command> <params>
-
-   $ github2slack sample <param>             # Uses the <PARAM>
-   $ github2slack other <param>              # Other the <PARAM>
-   $ github2slack another <param>            # Another the <PARAM>
+   $ github2slack <GITHUB_LABEL> <DESTINATION_SLACK_CHANNEL>
    
  Examples
 
-   $ github2slack sample TEST                # Uses the TEST
-   $ github2slack sample YOLO                # Uses the YOLO
-   $ github2slack other YOLO                 # Uses the YOLO
-   $ github2slack another YOLO               # Uses the YOLO
+   $ github2slack "Ready for QA" "qa-channel"    # Posts to #qa-channel when label is added
+   $ github2slack "DevReady" "codereviews"       # Posts to #codereviews when label is added
 `,
   {
     alias: {

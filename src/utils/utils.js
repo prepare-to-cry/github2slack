@@ -4,6 +4,7 @@
 const Chalk = require('chalk');
 const log = console.log;
 const fs = require('fs');
+const info = require('node-time-log').CompleteLog;
 
 Array.prototype.subarray = function (start, end) {
 	if (!end) { end = -1; }
@@ -25,9 +26,9 @@ const self = module.exports = {
 		return fs.readFileSync(filePath, 'utf-8');
 	},
 	title: (text) => {
-		log(Chalk.blue('==>') + Chalk.bold(` ${text}`));
+		info(Chalk.blue('==>') + Chalk.bold(` ${text}`));
 	},
 	titleError: (text) => {
-		log(Chalk.red('==>') + Chalk.bold(` ${text}`));
+		info(Chalk.red('==>') + Chalk.bold(` ${text}`));
 	}
 };

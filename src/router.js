@@ -5,13 +5,14 @@ const Chalk = require('chalk');
 const Utils = require('./utils/utils');
 const log = console.log;
 
-const ChannelTask = require('./tasks/channel_task');
+const REFRESH_TIME = 1000 * 60 * 2
 
+const ChannelTask = require('./tasks/channel_task');
 function run(label, channel) {
 	ChannelTask.init(label, channel);
 	setTimeout(() => {
 		run(label, channel)
-	}, 10000);
+	}, REFRESH_TIME);
 }
 
 // Main code //

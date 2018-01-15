@@ -114,7 +114,7 @@ const self = module.exports = {
 	init: (label, channel) => {
 		makeConfigFolder()
 		const cachePath = getCacheFilePath(label, channel)
-		Utils.title(Chalk.green(`Checking for new events...\n`));
+		Utils.title(Chalk.green(`Checking for new events for ${Chalk.yellow('#'+label)}...\n`));
 
     let events = getEvents()
         .filter(item => item.event === `labeled`)
@@ -124,7 +124,7 @@ const self = module.exports = {
     events = removeDuplicateEvents(events);
 
     if (events.length == 0) {
-        Utils.titleError(`No events this time`);
+        Utils.titleError(`No events for ${Chalk.yellow(label)} this time`);
     } else {
         log(`There are currently ${Chalk.green(events.length)} events(s):`);
 

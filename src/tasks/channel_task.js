@@ -64,15 +64,15 @@ function saveHighestDateOnCache(events, cachePath) {
 	}, cachePath);
 }
 
-function createSlackMessage(issue, label) {
+function createSlackMessage(actor, issue, label) {
 	const message = {
 			attachments: [{
-					fallback: `The pull request ${issue.html_url} was just tagged as: *${label}*`,
+					fallback: `The pull request ${issue.html_url} was just tagged as: *${label}* by ${actor.login}`,
 					color: "#36a64f",
 					author_name: issue.user.login,
 					title: `_#${issue.number}_ - *${issue.title}*`,
 					title_link: issue.html_url,
-					text: `This pull request was just tagged as: *${label}*`,
+					text: `This pull request was just tagged as: *${label}* by ${actor.login}`,
 					footer: BOT_NAME,
 					ts: Date.parse(new Date) / 1000
 			}]
@@ -130,7 +130,7 @@ const self = module.exports = {
 
         events.forEach(item => {
 						Utils.title(`Sending link to slack about ${Chalk.green('#'+item.issue.number)} - ${Chalk.green(item.issue.title)}`);
-            const message = createSlackMessage(item.issue, label);
+            const message = createSlackMessage(item.actor, item.issue, label);
             self.postMessageToSlack(message, channel);
         });
 

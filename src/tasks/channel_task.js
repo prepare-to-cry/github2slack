@@ -70,7 +70,8 @@ function createSlackMessage(actor, issue, label) {
 					fallback: `The pull request ${issue.html_url} was just tagged as: *${label}* by ${actor.login}`,
 					color: "#36a64f",
 					author_name: issue.user.login,
-					title: `_#${issue.number}_ - *${issue.title}*`,
+					// title: `_#${issue.number}_ - *${issue.title}*`, // no idea why markdown stopped working
+					title: `#${issue.number} - ${issue.title}`,
 					title_link: issue.html_url,
 					text: `This pull request was just tagged as: *${label}* by ${actor.login}`,
 					footer: BOT_NAME,

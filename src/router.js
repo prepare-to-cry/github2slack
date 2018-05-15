@@ -8,6 +8,7 @@ const log = console.log;
 const REFRESH_TIME = 1000 * 60 * 2
 
 const ChannelTask = require('./tasks/channel_task');
+
 function run(label, channel) {
 	ChannelTask.init(label, channel);
 	setTimeout(() => {

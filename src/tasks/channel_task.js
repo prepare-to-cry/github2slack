@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 'use strict';
 
 const log = console.log;
@@ -16,18 +17,18 @@ const BOT_NAME = 'github2slack Bot'
 
 function getEvents() {
 	const response = Request('GET', `https://api.github.com/repos/${process.env.REPO_USERNAME}/${process.env.REPO_NAME}/issues/events`, {
-			headers: {
-					'Authorization': `token ${process.env.GITHUB_TOKEN}`,
-					'User-Agent': 'Github-Label-Notifications'
-			}
+		headers: {
+			'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+			'User-Agent': 'Github-Label-Notifications'
+		}
 	});
 
 	let events = [];
 
 	if (response.statusCode === 200) {
-			events = JSON.parse(response.getBody());
+		events = JSON.parse(response.getBody());
 	} else {
-			log(Chalk.red(`Error: ${response.getBody()}`));
+		log(Chalk.red(`Error: ${response.getBody()}`));
 	}
 
 	return events;
@@ -37,9 +38,9 @@ function getLastTimestamp(cachePath) {
 	let lastTimestamp;
 
 	if (!Utils.fileExists(cachePath)) {
-			saveDataToCache({
-					lastTimestamp: new Date(0)
-			}, cachePath);
+		saveDataToCache({
+			lastTimestamp: new Date(0)
+		}, cachePath);
 	}
 
 	const cache = JSON.parse(Utils.readFile(cachePath));
@@ -56,27 +57,27 @@ function handleTimestamp(newTimestamp, cachePath) {
 
 function saveHighestDateOnCache(events, cachePath) {
 	const highestDate = events.sort((a, b) => {
-			return new Date(b.created_at) - new Date(a.created_at);
+		return new Date(b.created_at) - new Date(a.created_at);
 	})[0].created_at;
 
 	saveDataToCache({
-			lastTimestamp: highestDate
+		lastTimestamp: highestDate
 	}, cachePath);
 }
 
 function createSlackMessage(actor, issue, label) {
 	const message = {
-			attachments: [{
-					fallback: `The pull request ${issue.html_url} was just tagged as: *${label}* by ${actor.login}`,
-					color: "#36a64f",
-					author_name: issue.user.login,
-					// title: `_#${issue.number}_ - *${issue.title}*`, // no idea why markdown stopped working
-					title: `#${issue.number} - ${issue.title}`,
-					title_link: issue.html_url,
-					text: `This pull request was just tagged as: *${label}* by ${actor.login}`,
-					footer: BOT_NAME,
-					ts: Date.parse(new Date) / 1000
-			}]
+		attachments: [{
+			fallback: `The pull request ${issue.html_url} was just tagged as: *${label}* by ${actor.login}`,
+			color: "#36a64f",
+			author_name: issue.user.login,
+			// title: `_#${issue.number}_ - *${issue.title}*`, // no idea why markdown stopped working
+			title: `#${issue.number} - ${issue.title}`,
+			title_link: issue.html_url,
+			text: `This pull request was just tagged as: *${label}* by ${actor.login}`,
+			footer: BOT_NAME,
+			ts: Date.parse(new Date) / 1000
+		}]
 	}
 
 	return message;
@@ -88,8 +89,8 @@ function removeDuplicateEvents(events) {
 	const deDuplicatedEvents = [];
 
 	Object.keys(groupedEvents).forEach(function (key) {
-			const latestEvent = groupedEvents[key].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
-			deDuplicatedEvents.push(latestEvent);
+		const latestEvent = groupedEvents[key].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+		deDuplicatedEvents.push(latestEvent);
 	});
 
 	return deDuplicatedEvents;
@@ -117,38 +118,46 @@ const self = module.exports = {
 		const cachePath = getCacheFilePath(label, channel)
 		Utils.title(Chalk.green(`Checking for new events for ${Chalk.yellow('#'+label)}...\n`));
 
-    let events = getEvents()
-        .filter(item => item.event === `labeled`)
-        .filter(item => item.label.name.toLowerCase() === label.toLowerCase())
-        .filter(item => handleTimestamp(item.created_at, cachePath));
+		try {
+			let events = getEvents()
+				.filter(item => item.event === `labeled`)
+				.filter(item => item.label.name.toLowerCase() === label.toLowerCase())
+				.filter(item => handleTimestamp(item.created_at, cachePath));
 
-    events = removeDuplicateEvents(events);
+			events = removeDuplicateEvents(events);
 
-    if (events.length == 0) {
-        Utils.titleError(`No events for ${Chalk.yellow(label)} this time`);
-    } else {
-        log(`There are currently ${Chalk.green(events.length)} events(s):`);
+			if (events.length == 0) {
+				Utils.titleError(`No events for ${Chalk.yellow(label)} this time`);
+			} else {
+				log(`There are currently ${Chalk.green(events.length)} events(s):`);
 
-        events.forEach(item => {
-						Utils.title(`Sending link to slack about ${Chalk.green('#'+item.issue.number)} - ${Chalk.green(item.issue.title)}`);
-            const message = createSlackMessage(item.actor, item.issue, label);
-            self.postMessageToSlack(message, channel);
-        });
+				events.forEach(item => {
+					Utils.title(`Sending link to slack about ${Chalk.green('#'+item.issue.number)} - ${Chalk.green(item.issue.title)}`);
+					const message = createSlackMessage(item.actor, item.issue, label);
+					self.postMessageToSlack(message, channel);
+				});
 
-        saveHighestDateOnCache(events, cachePath);
-    }		
+				saveHighestDateOnCache(events, cachePath);
+			}
+		} catch (error) {
+			if (error.message) {
+				Utils.titleError(`An error occured: ${Chalk.red(error.message)}\n`);
+			} else {
+				Utils.titleError(`An error occured: ${Chalk.red(error)}\n`);
+			}
+		}
 	},
 
 	postMessageToSlack: (message, channel) => {
-    const slack = new SlackWebhook(process.env.SLACK_WEBHOOK, {
-        defaults: {
-            username: BOT_NAME,
-            channel: `#${channel}`,
-            icon_emoji: ':monkey_face:',
-            mrkdwn: true
-        }
-    });
+		const slack = new SlackWebhook(process.env.SLACK_WEBHOOK, {
+			defaults: {
+				username: BOT_NAME,
+				channel: `#${channel}`,
+				icon_emoji: ':monkey_face:',
+				mrkdwn: true
+			}
+		});
 
-    slack.send(message)
+		slack.send(message)
 	}
 };

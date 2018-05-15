@@ -43,4 +43,4 @@ Usage
 
 ## Created by
 - [Cesar Ferreira](https://cesarferreira.com)
-- [Thomas Bruggenwirth](https://github.com/Bruggy2268)
+- [Thomas Bruggenwirth](https://github.com/tombruggenwirth)

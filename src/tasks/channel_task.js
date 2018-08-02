@@ -111,6 +111,30 @@ function makeConfigFolder() {
 	}
 }
 
+function matchAtLeastOneLabel(eventLabel, labelsToMatch) {
+	const labelsToMatchSplit = labelsToMatch.split(',');
+
+	for (let index = 0; index < labelsToMatchSplit.length; index++) {
+		if (eventLabel.toLowerCase() === labelsToMatchSplit[index].toLowerCase()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function matchAllLabels(issueLabels, labelsToMatch) {
+	const labelsToMatchSplit = labelsToMatch.split(',');
+
+	for (let index = 0; index < labelsToMatchSplit.length; index++) {
+		if (issueLabels.filter(label => label.name.toLowerCase() === labelsToMatchSplit[index].toLowerCase()).length === 0) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 // Main code //
 const self = module.exports = {
 	init: (label, channel) => {
@@ -121,7 +145,8 @@ const self = module.exports = {
 		try {
 			let events = getEvents()
 				.filter(item => item.event === `labeled`)
-				.filter(item => item.label.name.toLowerCase() === label.toLowerCase())
+				.filter(item => matchAtLeastOneLabel(item.label.name, label))
+				.filter(item => matchAllLabels(item.issue.labels, label))
 				.filter(item => handleTimestamp(item.created_at, cachePath));
 
 			events = removeDuplicateEvents(events);
